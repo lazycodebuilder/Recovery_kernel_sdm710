@@ -86,7 +86,6 @@
          touchpanel,panel-coords = <1080 2340>;
          touchpanel,display-coords = <1080 2340>;
          incell_screen;
-         irq_need_dev_resume_ok;
          fw_edge_limit_support;
          black_gesture_support;
          charger_pump_support;
@@ -207,7 +206,7 @@
 //#ifdef VENDOR_EDIT
 &qupv3_se9_i2c  {
     //Wanghao@BSP.group 2018-04-15 add for enable i2c_9
-    status = "disabled";
+    status = "okay";
     synaptics17081@20 {
         compatible = "synaptics-s3706";
         reg = <0x20>;
