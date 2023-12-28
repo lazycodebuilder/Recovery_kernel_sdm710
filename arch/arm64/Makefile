@@ -156,19 +156,16 @@ KBUILD_IMAGE   := Image
 endif
 
 # Default target when executing plain make
-ifeq ($(CONFIG_BUILD_ARM64_APPENDED_DTB_IMAGE),y)
-KBUILD_IMAGE	:=  $(addsuffix -dtb,$(KBUILD_IMAGE))
-endif
+boot		:= arch/arm64/boot
+KBUILD_IMAGE	:= $(boot)/$(KBUILD_TARGET)
 
-KBUILD_DTBS	:= dtbs
+all:	$(KBUILD_IMAGE)
 
+KBUILD_DTBO_IMG := dtbo.img
+KBUILD_DTB_IMG := dtb.img
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 export DTC_FLAGS := -@
 endif
-
-all:	$(KBUILD_IMAGE) $(KBUILD_DTBS)
-
-boot := arch/arm64/boot
 
 Image: vmlinux
 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
@@ -178,20 +175,17 @@ Image.%: Image
 
 zinstall install:
 	$(Q)$(MAKE) $(build)=$(boot) $@
-
-%.dtb: scripts
-	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
-
-PHONY += dtbs dtbs_install
-
-dtbs: prepare scripts
-	$(Q)$(MAKE) $(build)=$(boot)/dts
-
-dtbs_install:
-	$(Q)$(MAKE) $(dtbinst)=$(boot)/dts
-
-Image-dtb Image.gz-dtb: vmlinux scripts dtbs
+	
+ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
+$(KBUILD_DTBO_IMG): dtbs
 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+
+all: $(KBUILD_DTBO_IMG)
+$(KBUILD_DTB_IMG): dtbs
+	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+
+all: $(KBUILD_DTB_IMG)
+endif
 
 PHONY += vdso_install
 vdso_install:
