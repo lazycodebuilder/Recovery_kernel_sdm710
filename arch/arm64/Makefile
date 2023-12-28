@@ -150,16 +150,18 @@ libs-y		:= arch/arm64/lib/ $(libs-y)
 core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
 
 ifeq ($(CONFIG_BUILD_ARM64_KERNEL_COMPRESSION_GZIP),y)
-KBUILD_IMAGE   := Image.gz
+KBUILD_TARGET   := Image.gz
 else
-KBUILD_IMAGE   := Image
+KBUILD_TARGET   := Image
 endif
 
 # Default target when executing plain make
 boot		:= arch/arm64/boot
 KBUILD_IMAGE	:= $(boot)/$(KBUILD_TARGET)
 
-all:	$(KBUILD_IMAGE)
+KBUILD_DTBS	:= dtbs
+
+all:	$(KBUILD_TARGET) $(KBUILD_DTBS)
 
 KBUILD_DTBO_IMG := dtbo.img
 KBUILD_DTB_IMG := dtb.img
@@ -186,6 +188,19 @@ $(KBUILD_DTB_IMG): dtbs
 
 all: $(KBUILD_DTB_IMG)
 endif
+
+%.dtb: scripts
+	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
+
+PHONY += dtbs dtbs_install
+
+dtbs: prepare scripts
+	$(Q)$(MAKE) $(build)=$(boot)/dts
+
+dtbs_install:
+	$(Q)$(MAKE) $(dtbinst)=$(boot)/dts
+
+Image-dtb Image.gz-dtb: vmlinux scripts dtbs
 
 PHONY += vdso_install
 vdso_install:
