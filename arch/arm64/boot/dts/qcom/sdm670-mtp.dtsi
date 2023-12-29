@@ -62,8 +62,9 @@
 &qupv3_se8_spi {
 	status = "disabled";
 };
+
 &qupv3_se0_spi {
- 	/* Novatek device tree node */
+	/* Novatek device tree node */
      status = "ok";
      #address-cells = <1>;
      #size-cells = <0>;
@@ -85,21 +86,20 @@
          touchpanel,panel-coords = <1080 2340>;
          touchpanel,display-coords = <1080 2340>;
          incell_screen;
-         irq_need_dev_resume_ok;
          fw_edge_limit_support;
          black_gesture_support;
          charger_pump_support;
          headset_pump_support;
          //spurious_fingerprint_support;
          //lcd_trigger_fp_check;
- 		esd_handle_support;
+         esd_handle_support;
          black_gesture_test_support;
          game_switch_support;
          noflash_support;
          lcd_trigger_load_tp_fw_support;
          smart_gesture_support;
- 		pressure_report_support;
-        fw_update_app_support;
+         pressure_report_support;
+         fw_update_app_support;
 
         /*
         *Virtual Key Config:
@@ -121,7 +121,6 @@
 
 //#ifndef OPLUS_FEATURE_CHG_BASIC
 //#endif /* OPLUS_FEATURE_CHG_BASIC */
-
 &qupv3_se10_i2c {
 	status = "ok";
 };
@@ -161,7 +160,7 @@
 	pinctrl-0 = <&sdc2_clk_on &sdc2_cmd_on &sdc2_data_on &sdc2_cd_on>;
 	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
 
-	cd-gpios = <&tlmm 96 0>;
+	cd-gpios = <&tlmm 96 0x0>;
 
 	status = "ok";
 };
@@ -199,7 +198,7 @@
 		reg = <0x10>;
 		ak4376,reset-gpio = <&tlmm 50 0x00>;
 		//audio-vdd-enable-gpio = <&tlmm 60 0x00>;
-		status = "disabled";
+		status = "okay";
 	};
 };
 /* #endif OPLUS_ARCH_EXTENDS */
@@ -207,7 +206,7 @@
 //#ifdef VENDOR_EDIT
 &qupv3_se9_i2c  {
     //Wanghao@BSP.group 2018-04-15 add for enable i2c_9
-    status = "disabled";
+    status = "okay";
     synaptics17081@20 {
         compatible = "synaptics-s3706";
         reg = <0x20>;
@@ -592,13 +591,13 @@
 	pinctrl-3 = <&qupv3_se10_i2c_pullup>;
 //#endif //OPLUS_FEATURE_CHG_BASIC
 
-
 	bq27541-battery@55 {
 		status = "okay";
 		compatible = "oplus,bq27541-battery";
 		reg = <0x55>;
 		qcom,modify-soc-smooth;
 	};
+
 
 	stm8s_fastcg@26{
 		status = "okay";

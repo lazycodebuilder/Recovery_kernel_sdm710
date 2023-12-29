@@ -1,7 +1,17 @@
-// SPDX-License-Identifier: GPL-2.0-only
-/*
- * Copyright (C) 2018-2020 Oplus. All rights reserved.
- */
+/***************************************************
+ * File:touch_interfaces.c
+ * VENDOR_EDIT
+ * Copyright (c)  2008- 2030  Oppo Mobile communication Corp.ltd.
+ * Description:
+ *             Touch interface
+ * Version:1.0:
+ * Date created:2016/09/02
+ * Author: Tong.han@Bsp.Driver
+ * TAG: BSP.TP.Init
+ * *
+ * -------------- Revision History: -----------------
+ *  <author >  <data>  <version>  <desc>
+ ***************************************************/
 
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -17,8 +27,6 @@
 #include <linux/dma-mapping.h>
 
 #include "touch_interfaces.h"
-#include "../touchpanel_common.h"
-#include "../touchpanel_healthinfo.h"
 
 #ifdef CONFIG_HAVE_ARCH_VMAP_STACK
 #define FIX_I2C_LENGTH   256
@@ -44,7 +52,6 @@ int touch_i2c_continue_read(struct i2c_client *client, unsigned short length, un
     int retval;
     unsigned char retry;
     struct i2c_msg msg;
-    struct touchpanel_data *ts = i2c_get_clientdata(client);
 
     msg.addr = client->addr;
     msg.flags = I2C_M_RD;
@@ -61,11 +68,6 @@ int touch_i2c_continue_read(struct i2c_client *client, unsigned short length, un
     if (retry == MAX_I2C_RETRY_TIME) {
         TPD_INFO("%s: I2C read over retry limit\n", __func__);
         retval = -EIO;
-        if (ts->health_monitor_v2_support) {
-            ts->monitor_data_v2.bus_buf = msg.buf;
-            ts->monitor_data_v2.bus_len = msg.len;
-            tp_healthinfo_report(&ts->monitor_data_v2, HEALTH_BUS, &retval);
-        }
     }
     return retval;
 
@@ -88,7 +90,6 @@ int touch_i2c_read_block(struct i2c_client *client, u16 addr, unsigned short len
     unsigned char retry;
     unsigned char buffer[2] = {(addr >> 8) & 0xff, addr & 0xff};
     struct i2c_msg msg[2];
-    struct touchpanel_data *ts = i2c_get_clientdata(client);
 
     msg[0].addr = client->addr;
     msg[0].flags = 0;
@@ -118,11 +119,6 @@ int touch_i2c_read_block(struct i2c_client *client, u16 addr, unsigned short len
     if (retry == MAX_I2C_RETRY_TIME) {
         dev_err(&client->dev, "%s: I2C read over retry limit\n", __func__);
         retval = -EIO;
-        if (ts->health_monitor_v2_support) {
-            ts->monitor_data_v2.bus_buf = msg[0].buf;
-            ts->monitor_data_v2.bus_len = msg[0].len;
-            tp_healthinfo_report(&ts->monitor_data_v2, HEALTH_BUS, &retval);
-        }
     }
     return retval;
 }
@@ -135,7 +131,6 @@ int touch_i2c_read_block(struct i2c_client *client, u16 addr, unsigned short len
     static unsigned int read_buf_size = 0;
     static unsigned char *buffer = NULL;
     struct i2c_msg msg[2];
-    struct touchpanel_data *ts = i2c_get_clientdata(client);
 
     mutex_lock(&i2c_mutex);
 
@@ -225,11 +220,6 @@ int touch_i2c_read_block(struct i2c_client *client, u16 addr, unsigned short len
     if (retry == MAX_I2C_RETRY_TIME) {
         TPD_INFO("%s: I2C read over retry limit\n", __func__);
         retval = -EIO;
-        if (ts->health_monitor_v2_support) {
-            ts->monitor_data_v2.bus_buf = msg[0].buf;
-            ts->monitor_data_v2.bus_len = msg[0].len;
-            tp_healthinfo_report(&ts->monitor_data_v2, HEALTH_BUS, &retval);
-        }
     }
     memcpy(data, read_buf, length);
 
@@ -252,7 +242,6 @@ int touch_i2c_continue_write(struct i2c_client *client, unsigned short length, u
     int retval;
     unsigned char retry;
     struct i2c_msg msg;
-    struct touchpanel_data *ts = i2c_get_clientdata(client);
 
     msg.addr = client->addr;
     msg.flags = 0;
@@ -269,11 +258,6 @@ int touch_i2c_continue_write(struct i2c_client *client, unsigned short length, u
     if (retry == MAX_I2C_RETRY_TIME) {
         TPD_INFO("%s: I2C write over retry limit\n", __func__);
         retval = -EIO;
-        if (ts->health_monitor_v2_support) {
-            ts->monitor_data_v2.bus_buf = msg.buf;
-            ts->monitor_data_v2.bus_len = msg.len;
-            tp_healthinfo_report(&ts->monitor_data_v2, HEALTH_BUS, &retval);
-        }
     }
     return retval;
 }
@@ -295,7 +279,6 @@ int touch_i2c_write_block(struct i2c_client *client, u16 addr, unsigned short le
     unsigned char retry;
     unsigned char buffer[length + 2];
     struct i2c_msg msg[1];
-    struct touchpanel_data *ts = i2c_get_clientdata(client);
 
     msg[0].addr = client->addr;
     msg[0].flags = 0;
@@ -304,16 +287,14 @@ int touch_i2c_write_block(struct i2c_client *client, u16 addr, unsigned short le
     if (!register_is_16bit) { // if register is 8bit
         msg[0].len = length + 1;
         msg[0].buf[0] = addr & 0xff;
-        if (data) {
-            memcpy(&buffer[1], &data[0], length);
-        }
+
+        memcpy(&buffer[1], &data[0], length);
     } else {
         msg[0].len = length + 2;
         msg[0].buf[0] = (addr >> 8) & 0xff;
         msg[0].buf[1] = addr & 0xff;
-        if (data) {
-            memcpy(&buffer[2], &data[0], length);
-        }
+
+        memcpy(&buffer[2], &data[0], length);
     }
 
     for (retry = 0; retry < MAX_I2C_RETRY_TIME; retry++) {
@@ -326,11 +307,6 @@ int touch_i2c_write_block(struct i2c_client *client, u16 addr, unsigned short le
     if (retry == MAX_I2C_RETRY_TIME) {
         TPD_INFO("%s: I2C write over retry limit\n", __func__);
         retval = -EIO;
-        if (ts->health_monitor_v2_support) {
-            ts->monitor_data_v2.bus_buf = msg[0].buf;
-            ts->monitor_data_v2.bus_len = msg[0].len;
-            tp_healthinfo_report(&ts->monitor_data_v2, HEALTH_BUS, &retval);
-        }
     }
     return retval;
 }
@@ -343,7 +319,6 @@ int touch_i2c_write_block(struct i2c_client *client, u16 addr, unsigned short le
     static unsigned int write_buf_size = 0;
     static unsigned char *write_buf = NULL;
     struct i2c_msg msg[1];
-    struct touchpanel_data *ts = i2c_get_clientdata(client);
 
     mutex_lock(&i2c_mutex);
 
@@ -402,16 +377,14 @@ int touch_i2c_write_block(struct i2c_client *client, u16 addr, unsigned short le
     if (!register_is_16bit) { // if register is 8bit
         msg[0].len = length + 1;
         msg[0].buf[0] = addr & 0xff;
-        if (data) {
-            memcpy(&write_buf[1], &data[0], length);
-        }
+
+        memcpy(&write_buf[1], &data[0], length);
     } else {
         msg[0].len = length + 2;
         msg[0].buf[0] = (addr >> 8) & 0xff;
         msg[0].buf[1] = addr & 0xff;
-        if (data) {
-            memcpy(&write_buf[2], &data[0], length);
-        }
+
+        memcpy(&write_buf[2], &data[0], length);
     }
 
     for (retry = 0; retry < MAX_I2C_RETRY_TIME; retry++) {
@@ -424,11 +397,6 @@ int touch_i2c_write_block(struct i2c_client *client, u16 addr, unsigned short le
     if (retry == MAX_I2C_RETRY_TIME) {
         TPD_INFO("%s: I2C write over retry limit\n", __func__);
         retval = -EIO;
-        if (ts->health_monitor_v2_support) {
-            ts->monitor_data_v2.bus_buf = msg[0].buf;
-            ts->monitor_data_v2.bus_len = msg[0].len;
-            tp_healthinfo_report(&ts->monitor_data_v2, HEALTH_BUS, &retval);
-        }
     }
 
     mutex_unlock(&i2c_mutex);
@@ -555,10 +523,8 @@ int touch_i2c_read(struct i2c_client *client, char *writebuf, int writelen, char
     int retval = 0;
     int retry = 0;
 
-    mutex_lock(&i2c_mutex);
     if (client == NULL) {
         TPD_INFO("%s: i2c_client == NULL!\n", __func__);
-        mutex_unlock(&i2c_mutex);
         return -1;
     }
 
@@ -611,7 +577,6 @@ int touch_i2c_read(struct i2c_client *client, char *writebuf, int writelen, char
         }
     }
 
-    mutex_unlock(&i2c_mutex);
     return retval;
 }
 
@@ -629,10 +594,8 @@ int touch_i2c_write(struct i2c_client *client, char *writebuf, int writelen)
     int retval = 0;
     int retry = 0;
 
-    mutex_lock(&i2c_mutex);
     if (client == NULL) {
         TPD_INFO("%s: i2c_client == NULL!", __func__);
-        mutex_unlock(&i2c_mutex);
         return -1;
     }
 
@@ -658,7 +621,6 @@ int touch_i2c_write(struct i2c_client *client, char *writebuf, int writelen)
             retval = -EIO;
         }
     }
-    mutex_unlock(&i2c_mutex);
 
     return retval;
 }
@@ -691,7 +653,6 @@ int32_t spi_read_write(struct spi_device *client, uint8_t *buf, size_t len, uint
     u8 *tx_buf = NULL;
     u8 *rx_buf = NULL;
     int status;
-    struct touchpanel_data *ts = spi_get_drvdata(client);
 
     switch (rw) {
     case SPIREAD:
@@ -708,9 +669,6 @@ int32_t spi_read_write(struct spi_device *client, uint8_t *buf, size_t len, uint
             goto spi_out;
         }
         memset(rx_buf, 0xFF, len + DUMMY_BYTES);
-        t.tx_buf = tx_buf;
-        t.rx_buf = rx_buf;
-        t.len    = (len + DUMMY_BYTES);
         break;
 
     case SPIWRITE:
@@ -720,6 +678,18 @@ int32_t spi_read_write(struct spi_device *client, uint8_t *buf, size_t len, uint
             goto spi_out;
         }
         memcpy(tx_buf, buf, len);
+        break;
+    }
+
+
+    switch (rw) {
+    case SPIREAD:
+        t.tx_buf = tx_buf;
+        t.rx_buf = rx_buf;
+        t.len    = (len + DUMMY_BYTES);
+        break;
+
+    case SPIWRITE:
         t.tx_buf = tx_buf;
         break;
     }
@@ -732,14 +702,6 @@ int32_t spi_read_write(struct spi_device *client, uint8_t *buf, size_t len, uint
             memcpy(rbuf, rx_buf, len + DUMMY_BYTES);
 
         }
-    } else if (ts->health_monitor_v2_support) {
-        ts->monitor_data_v2.bus_buf = tx_buf;
-        if (rw == SPIREAD) {
-            ts->monitor_data_v2.bus_len = len + DUMMY_BYTES;
-        } else if (rw == SPIWRITE) {
-            ts->monitor_data_v2.bus_len = len;
-        }
-        tp_healthinfo_report(&ts->monitor_data_v2, HEALTH_BUS, &status);
     }
 
 spi_out:
@@ -766,8 +728,6 @@ int32_t spi_read_write(struct spi_device *client, uint8_t *buf, size_t len, uint
     struct spi_transfer t = {
         .len    = len,
     };
-    int status;
-    struct touchpanel_data *ts = spi_get_drvdata(client);
 
     switch (rw) {
     case SPIREAD:
@@ -783,18 +743,7 @@ int32_t spi_read_write(struct spi_device *client, uint8_t *buf, size_t len, uint
 
     spi_message_init(&m);
     spi_message_add_tail(&t, &m);
-    status = spi_sync(client, &m);
-    if (status && ts->health_monitor_v2_support) {
-        if (rw == SPIREAD) {
-            ts->monitor_data_v2.bus_buf = &buf[0];
-            ts->monitor_data_v2.bus_len = len + DUMMY_BYTES;
-        } else if (rw == SPIWRITE) {
-            ts->monitor_data_v2.bus_buf = buf;
-            ts->monitor_data_v2.bus_len = len;
-        }
-        tp_healthinfo_report(&ts->monitor_data_v2, HEALTH_BUS, &status);
-    }
-    return status;
+    return spi_sync(client, &m);
 }
 #endif
 
@@ -872,16 +821,10 @@ int spi_write_firmware(struct spi_device *client, u8 *fw, u32 *len_array, u8 arr
     u8 *buf = NULL;
     //unsigned	cs_change:1;
     struct spi_message m;
-    struct spi_transfer *t;
-
-    t = kzalloc(sizeof(struct spi_transfer)*array_len, GFP_KERNEL | GFP_DMA);
-    if (!t) {
-        TPD_INFO("error, no mem!");
-        return -ENOMEM;
-    }
+    struct spi_transfer t[array_len];
 
     spi_message_init(&m);
-    //memset(t, 0, sizeof(t));
+    memset(t, 0, sizeof(t));
 
     buf = fw;
     for (i = 0; i < array_len; i++) {
@@ -891,9 +834,6 @@ int spi_write_firmware(struct spi_device *client, u8 *fw, u32 *len_array, u8 arr
         spi_message_add_tail(&t[i], &m);
         //TPD_INFO("i=%d, len=%d, buf[0]=%x\n", i, len_array[i], buf[0]);
         buf = buf + len_array[i];
-    }
-    if (array_len) {
-        t[array_len - 1].cs_change = 0;
     }
 
     while(retry < 5) {
@@ -906,7 +846,6 @@ int spi_write_firmware(struct spi_device *client, u8 *fw, u32 *len_array, u8 arr
     if (unlikely(retry == 5)) {
         TPD_INFO("error, ret=%d\n", ret);
     }
-    kfree(t);
     return ret;
 }
 

@@ -1,5 +1,5 @@
 
-#ifdef OPLUS_FEATURE_TP_BASIC
+#ifdef VENDOR_EDIT
 #Added by Tong.han@Bsp.group.Tp for synaptics ic driver
 
 #config TOUCHPANEL_OPPO

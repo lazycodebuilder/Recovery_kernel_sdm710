@@ -11,7 +11,7 @@ static struct kobject *systeminfo_kobj;
 
 #define MAX_CMD_LENGTH 32
 
-static int ftm_mode __ro_after_init = MSM_BOOT_MODE__NORMAL;
+static int ftm_mode = MSM_BOOT_MODE__NORMAL;
 
 int __init  board_mfg_mode_init(void)
 {
@@ -51,6 +51,7 @@ int get_boot_mode(void)
         return ftm_mode;
 }
 #ifdef VENDOR_EDIT
+/*Jianfeng.Qiu@PSW.MM.AudioDriver.Machine, 2018/05/12, Add for audio dlkm*/
 EXPORT_SYMBOL(get_boot_mode);
 #endif /* VENDOR_EDIT */
 
@@ -131,7 +132,7 @@ static int __init start_reason_init(void)
 }
 /*__setup("androidboot.startupmode=", start_reason_setup);*/
 
-char boot_mode[MAX_CMD_LENGTH + 1] __ro_after_init;
+char boot_mode[MAX_CMD_LENGTH + 1];
 
 #ifdef VENDOR_EDIT
 /*Fuchun.Liao@Mobile.BSP.CHG 2016-01-14 add for charge*/
@@ -197,34 +198,6 @@ static int __init oppo_charger_reboot(void)
 }
 #endif /*VENDOR_EDIT*/
 
-#ifdef VENDOR_EDIT
-/*Xianlin.Wu@ROM.Security add for detect bootloader unlock state 2019-10-28*/
-static int verified_boot_state __ro_after_init = VERIFIED_BOOT_STATE__GREEN;
-bool is_bootloader_unlocked(void)
-{
-        return verified_boot_state == VERIFIED_BOOT_STATE__ORANGE;
-}
-
-static int __init verified_boot_state_init(void)
-{
-        char * substr = strstr(boot_command_line, "androidboot.verifiedbootstate=");
-        if (substr) {
-                substr += strlen("androidboot.verifiedbootstate=");
-                if (strncmp(substr, "green", 5) == 0) {
-                        verified_boot_state = VERIFIED_BOOT_STATE__GREEN;
-                } else if (strncmp(substr, "orange", 6) == 0) {
-                        verified_boot_state = VERIFIED_BOOT_STATE__ORANGE;
-                } else if (strncmp(substr, "yellow", 6) == 0) {
-                        verified_boot_state = VERIFIED_BOOT_STATE__YELLOW;
-                } else if (strncmp(substr, "red", 3) == 0) {
-                        verified_boot_state = VERIFIED_BOOT_STATE__RED;
-		} else {
-			verified_boot_state = VERIFIED_BOOT_STATE__GREEN;
-                }
-        }
-        return 0;
-}
-#endif /*VENDOR_EDIT*/
 
 int __init  board_boot_mode_init(void)
 {
@@ -261,10 +234,6 @@ static int __init boot_mode_init(void)
 #ifdef VENDOR_EDIT
 /*PengNan@SW.BSP add for detect charger when reboot 2016-04-22*/
         oppo_charger_reboot();
-#endif /*VENDOR_EDIT*/
-#ifdef VENDOR_EDIT
-/*Xianlin.Wu@ROM.Security add for detect bootloader unlock state 2019-10-28*/
-        verified_boot_state_init();
 #endif /*VENDOR_EDIT*/
 
 /* OPPO 2013-09-03 zhanglong add for add interface start reason and boot_mode end */

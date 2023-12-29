@@ -1,7 +1,17 @@
-/* SPDX-License-Identifier: GPL-2.0-only */
-/*
- * Copyright (C) 2018-2020 Oplus. All rights reserved.
- */
+/***************************************************
+ * File:himax_common.h
+ * VENDOR_EDIT
+ * Copyright (c)  2008- 2030  Oppo Mobile communication Corp.ltd.
+ * Description:
+ *             himax common driver
+ * Version:1.0:
+ * Date created:2016/09/02
+ * Author: Tong.han@Bsp.Driver
+ * TAG: BSP.TP.Init
+ * *
+ * -------------- Revision History: -----------------
+ *  <author >  <data>  <version>  <desc>
+ ***************************************************/
 
 #ifndef HIMAX_COMMON_H
 #define HIMAX_COMMON_H
@@ -14,7 +24,7 @@
 #include <linux/time.h>
 
 #include "../touchpanel_common.h"
-#include <soc/oplus/system/oppo_project.h>
+#include <soc/oppo/oppo_project.h>
 #include <soc/oppo/device_info.h>
 
 /*********PART2:Define Area**********************/
@@ -97,12 +107,6 @@ struct test_header {
     unsigned int array_limitcbc_offset;
     unsigned int array_limitcbc_size;
 };
-struct hx_limit_data {
-    int item_size;
-    int rawdata_size;
-    char **item_name;
-    int **crtra_val;
-};
 
 struct syna_testdata{
     int TX_NUM;
@@ -133,8 +137,6 @@ struct himax_proc_operations {
     size_t (*himax_proc_FW_debug_read) (struct file *file, char *buff, size_t len, loff_t *pos);
     size_t (*himax_proc_reset_write) (struct file *file, const char *buff, size_t len, loff_t *pos);
     size_t (*himax_proc_sense_on_off_write) (struct file *file, const char *buff, size_t len, loff_t *pos);
-    size_t (*himax_proc_vendor_read)(struct file *file, char *buff, size_t len, loff_t *pos);
-    void (*fp_hx_limit_get)(struct touchpanel_data *ts, struct hx_limit_data *limit);
 };
 
 
