@@ -52,6 +52,7 @@
 #endif
 
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 
 extern void mt_power_off(void); 
 #else
@@ -73,7 +74,7 @@ extern void mt_power_off(void);
 
 #include <mach/oppo_boot_mode.h>
 #include <soc/oppo/device_info.h>
-
+#include <soc/oppo/oppo_project.h>
 
 #endif
 

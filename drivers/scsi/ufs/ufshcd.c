@@ -51,6 +51,7 @@
 
 #ifdef VENDOR_EDIT
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 #endif
 #define CREATE_TRACE_POINTS
 #include <trace/events/ufs.h>

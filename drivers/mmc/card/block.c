@@ -54,6 +54,7 @@
 #ifdef VENDOR_EDIT
 //xiaohua.tian@Prd6.BaseDrv.Sensor,2016/10/31, Add for eMMC and DDR device information
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 #endif /* VENDOR_EDIT */
 
 MODULE_ALIAS("mmc:block");

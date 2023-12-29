@@ -42,6 +42,7 @@
 //#include <mt-plat/battery_meter.h>
 #include <linux/module.h>
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 
 #else
 #include <linux/i2c.h>
@@ -61,6 +62,8 @@
 #include <linux/regulator/of_regulator.h>
 #include <linux/regulator/machine.h>
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
+
 #endif
 #include "oplus_vooc_fw.h"
 

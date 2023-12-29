@@ -59,6 +59,7 @@
 #include <linux/regulator/of_regulator.h>
 #include <linux/regulator/machine.h>
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 
 #endif
 

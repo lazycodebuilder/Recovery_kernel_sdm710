@@ -44,6 +44,7 @@
 #include <mt-plat/charger_type.h>
 //#include <mt-plat/battery_common.h>
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 
 #else
 #include <linux/i2c.h>
@@ -63,6 +64,7 @@
 #include <linux/regulator/of_regulator.h>
 #include <linux/regulator/machine.h>
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 
 #endif
 

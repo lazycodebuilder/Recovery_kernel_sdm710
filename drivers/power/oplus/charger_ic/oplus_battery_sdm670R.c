@@ -37,6 +37,7 @@
 
 #include <soc/oppo/boot_mode.h>
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 #include <soc/oplus/system/oppo_project.h>
 
 #include "../oplus_charger.h"

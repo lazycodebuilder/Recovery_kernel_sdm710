@@ -42,6 +42,7 @@
 //#include <mt-plat/charging.h>
 #include <mt-plat/charger_type.h>
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 
 extern void mt_power_off(void); 
 #else
@@ -62,7 +63,7 @@ extern void mt_power_off(void);
 #include <linux/regulator/machine.h>
 #include <linux/rtc.h>
 #include <soc/oppo/device_info.h>
-
+#include <soc/oppo/oppo_project.h>
 
 #endif
 

@@ -69,6 +69,7 @@
 #include "../oplus/oplus_gauge.h"
 #ifdef VENDOR_EDIT
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 #include <soc/oplus/system/oppo_project.h>
 #include <linux/gpio.h>
 #endif  /*VENDOR_EDIT*/

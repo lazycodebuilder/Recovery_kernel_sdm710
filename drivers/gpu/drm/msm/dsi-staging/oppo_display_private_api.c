@@ -22,6 +22,7 @@
 #include <soc/oplus/system/oppo_project.h>
 #include <linux/oppo_mm_kevent_fb.h>
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 extern int msm_drm_notifier_call_chain(unsigned long val, void *v);
 
 int oppo_request_power_status = OPPO_DISPLAY_POWER_ON;

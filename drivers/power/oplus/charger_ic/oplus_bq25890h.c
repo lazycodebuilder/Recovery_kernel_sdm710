@@ -53,8 +53,10 @@
 
 #if defined CONFIG_OPLUS_CHARGER_MTK6763 || defined(CONFIG_OPLUS_CHARGER_MTK6771)
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 #else
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 #endif
 
 

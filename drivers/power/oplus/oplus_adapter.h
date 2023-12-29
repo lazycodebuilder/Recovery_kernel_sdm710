@@ -25,6 +25,7 @@
 #include <linux/timer.h>
 #include <linux/slab.h>
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 #include <linux/firmware.h>
 
 enum {

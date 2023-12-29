@@ -58,7 +58,7 @@
 #include <mach/mtk_rtc.h>
 #endif
 #include <soc/oppo/device_info.h>
-
+#include <soc/oppo/oppo_project.h>
 
 
 //extern void mt_power_off(void);
@@ -81,6 +81,7 @@
 
 #include <mach/oppo_boot_mode.h>
 #include <soc/oppo/device_info.h>
+#include <soc/oppo/oppo_project.h>
 
 void (*enable_aggressive_segmentation_fn)(bool);
 
