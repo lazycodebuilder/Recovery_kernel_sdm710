@@ -35,6 +35,17 @@ extern bool qpnp_is_power_off_charging(void);
 /*PengNan@SW.BSP add for detect charger when reboot 2016-04-22*/
 extern bool qpnp_is_charger_reboot(void);
 #endif /*VENDOR_EDIT*/
+#ifdef VENDOR_EDIT
+/*Xianlin.Wu@ROM.Security add for detect bootloader unlock state 2019-10-28*/
+enum{
+        VERIFIED_BOOT_STATE__GREEN,
+        VERIFIED_BOOT_STATE__ORANGE,
+        VERIFIED_BOOT_STATE__YELLOW,
+        VERIFIED_BOOT_STATE__RED,
+};
+
+extern bool is_bootloader_unlocked(void);
+#endif /*VENDOR_EDIT*/
 #endif  /*_OPPO_BOOT_H*/
 
 #ifdef VENDOR_EDIT
@@ -43,4 +54,6 @@ extern bool qpnp_is_charger_reboot(void);
 extern bool op_is_monitorable_boot(void);
 #endif
 #endif
+
+
 
